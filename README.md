@@ -86,9 +86,6 @@ flowchart LR
 
 > **¿Por qué Podman y no Docker?** Podman es un motor de contenedores de código abierto, **daemonless** (más ligero) y compatible con los mismos archivos `docker-compose.yml`. Es una alternativa moderna y segura a Docker.
 
----
-
----
 
 ## 📋 Requisitos previos
 
