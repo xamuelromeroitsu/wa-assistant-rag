@@ -1,0 +1,48 @@
+# Environment variables
+.env
+.env.local
+
+# Dependencies
+node_modules/
+
+# Session data
+.wwebjs_auth/
+
+# Ollama cache
+.ollama/
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Build
+dist/
+build/
+
+# Docker
+.docker/
+
+# Temporary
+tmp/
+temp/
+
+# Secrets
+*.pem
+*.key
+*.secret
