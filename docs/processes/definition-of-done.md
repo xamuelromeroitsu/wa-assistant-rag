@@ -15,8 +15,8 @@ Un elemento del backlog (historia, tarea, bug) se considera **"Hecho" (Done)** c
 
 ### Para historias de funcionalidad (H1-H5)
 
-- [ ] Los criterios de aceptación funcionales de [03-functional-spec.md](../producto/03-functional-spec.md) están cumplidos
-- [ ] Los criterios técnicos de [02-mvp-scope.md](../producto/02-mvp-scope.md) están cumplidos
+- [ ] Los criterios de aceptación funcionales de [03-functional-spec.md](../product/03-functional-spec.md) están cumplidos
+- [ ] Los criterios técnicos de [02-mvp-scope.md](../product/02-mvp-scope.md) están cumplidos
 - [ ] El código pasa **lint** sin errores (`npm run lint`)
 - [ ] Los **tests** correspondientes pasan (`npm run test`)
 - [ ] No hay dependencias sin usar en el código
@@ -40,7 +40,7 @@ Un elemento del backlog (historia, tarea, bug) se considera **"Hecho" (Done)** c
 
 ## Criterios de "terminado" para el MVP completo
 
-Según [02-mvp-scope.md](../producto/02-mvp-scope.md):
+Según [02-mvp-scope.md](../product/02-mvp-scope.md):
 
 1. Las 5 historias H1–H5 implementadas y verificadas por tests.
 2. Guía de instalación reproducida sin pasos omitidos.
