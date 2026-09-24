@@ -1,0 +1,126 @@
+# docker-compose.yml — Compatible con Podman y Docker
+# ---------------------------------------------------
+# Este archivo funciona SIN CAMBIOS en ambos motores de contenedores:
+#   - Podman:  `podman compose up -d`  (recomendado, daemonless, rootless)
+#   - Docker:  `docker compose up -d`
+#
+# Podman es compatible con la especificación Compose v3.8 y usa
+# los mismos archivos docker-compose.yml. No se requiere Docker Desktop.
+
+version: '3.8'
+
+services:
+  db:
+    # Imagen oficial pgvector con PostgreSQL 16 + pgvector preinstalado
+    # Disponible en Docker Hub: https://hub.docker.com/r/pgvector/pgvector
+    image: pgvector/pgvector:pg16
+    container_name: wa-assistant-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      # PGPASSWORD se inyecta desde .env (nunca hardcodear secretos)
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: wa_assistant
+    volumes:
+      # Volumen named para persistencia de datos (sobrevive a recrear contenedor)
+      - pgdata:/var/lib/postgresql/data
+      # Script de inicialización SQL (se ejecuta automáticamente al crear la BD)
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      # Verifica que PostgreSQL acepte conexiones
+      test: ["CMD-SHELL", "pg_isready -U postgres -d wa_assistant"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  # Volumen named para datos de PostgreSQL
+  # En Podman se gestiona igual que en Docker: `podman volume ls/inspect/rm`
+  pgdata:
+
+# =============================================================================
+# COMANDOS ÚTILES (Podman / Docker son intercambiables)
+# =============================================================================
+#
+# LEVANTAR / DETENER
+# -------------------
+# podman compose up -d        # Inicia en background (detached)
+# podman compose up           # Inicia en foreground (ver logs en vivo)
+# podman compose down         # Para y elimina contenedores (NO borra volumen pgdata)
+# podman compose down -v      # Para, elimina contenedores Y borra volumen pgdata (CUIDADO: pierde datos)
+#
+# LOGS
+# ----
+# podman compose logs -f db   # Sigue logs del servicio 'db' en tiempo real
+# podman compose logs db      # Muestra logs y sale
+# podman compose logs --tail 50 db  # Últimas 50 líneas
+#
+# ESTADO / INSPECCIÓN
+# -------------------
+# podman compose ps           # Lista contenedores del compose
+# podman compose ps -a        # Incluye detenidos
+# podman inspect wa-assistant-db  # Detalles completos del contenedor (JSON)
+# podman exec -it wa-assistant-db psql -U postgres -d wa_assistant  # Shell SQL interactiva
+#
+# BASE DE DATOS (psql dentro del contenedor)
+# ------------------------------------------
+# Conectar:
+#   podman exec -it wa-assistant-db psql -U postgres -d wa_assistant
+#
+# Consultas útiles una vez dentro de psql:
+#   \dt                          # Lista tablas
+#   \d documents                 # Estructura tabla documents
+#   \d chunks                    # Estructura tabla chunks
+#   \d embeddings                # Estructura tabla embeddings (+ índice vectorial)
+#   \d sessions                  # Estructura tabla sessions
+#   SELECT * FROM documents;     # Ver documentos cargados
+#   SELECT count(*) FROM chunks; # Total de fragmentos
+#   SELECT count(*) FROM embeddings; # Total de vectores
+#   \q                           # Salir de psql
+#
+# VOLÚMENES (persistencia)
+# ------------------------
+# podman volume ls              # Lista volúmenes
+# podman volume inspect pgdata  # Detalles del volumen (mountpoint, etc.)
+# podman volume rm pgdata       # ELIMINA datos de la BD (irreversible)
+#
+# BACKUP / RESTORE
+# ----------------
+# Backup:
+#   podman exec wa-assistant-db pg_dump -U postgres wa_assistant > backup.sql
+#
+# Restore (con contenedor corriendo):
+#   cat backup.sql | podman exec -i wa-assistant-db psql -U postgres -d wa_assistant
+#
+# RECREAR DESDE CERO (limpio total)
+# ---------------------------------
+# podman compose down -v        # Borra contenedor + volumen
+# podman compose up -d          # Recrea todo, ejecuta init-db.sql de nuevo
+#
+# CAMBIAR PUERTO (si 5432 ocupado)
+# --------------------------------
+# 1. Edita .env: PGPORT=5433
+# 2. Edita docker-compose.yml: ports: "5433:5432"
+# 3. podman compose up -d
+#
+# CAMBIAR PASSWORD
+# ----------------
+# 1. Edita .env: PGPASSWORD=nueva_password_segura
+# 2. podman compose down -v     # Requiere recrear volumen (PostgreSQL no permite cambiar pass de usuario existente fácilmente)
+# 3. podman compose up -d
+#
+# VER USO DE RECURSOS
+# -------------------
+# podman stats wa-assistant-db  # CPU, MEM, NET, BLOCK I/O en vivo
+#
+# =============================================================================
+# NOTAS IMPORTANTES
+# =============================================================================
+# - El script init-db.sql SOLO se ejecuta la PRIMERA vez que se crea el volumen pgdata.
+#   Si ya existe el volumen, NO se vuelve a ejecutar (comportamiento estándar de Postgres).
+# - Para forzar re-ejecución del init: `podman compose down -v && podman compose up -d`
+# - La variable PGPASSWORD en .env DEBE coincidir con POSTGRES_PASSWORD del compose.
+# - Healthcheck espera a que pg_isready responda OK antes de considerar el servicio "healthy".
+# - Podman no requiere daemon ni root; preferible en Linux. En Mac/Windows usa máquina virtual.
