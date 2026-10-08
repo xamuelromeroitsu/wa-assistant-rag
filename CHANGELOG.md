@@ -4,6 +4,13 @@
 
 ## [v0.0.1] - 2026-10-08
 
+### Herramientas de desarrollo
+
+- `package.json`: dependencias del bot (`pg`, `whatsapp-web.js`, `dotenv`, `pdf-parse`, `express`) y scripts `dev`, `start`, `ingest`, `test`, `lint`.
+- ESLint 10 con config flat y reglas de estilo (2 espacios, comillas simples, `;`).
+- Vitest 4 como runner de tests con soporte de cobertura (`@vitest/coverage-v8`).
+- Primer test unitario (`tests/unit/config.test.js`) que valida las variables mínimas de `.env.example`.
+
 ### Infraestructura
 
 - Script `scripts/setup-db.sh`: levanta y verifica PostgreSQL + pgvector de forma idempotente (crea `.env`, up de compose, espera a PostgreSQL, valida esquema y extensión `vector`).
