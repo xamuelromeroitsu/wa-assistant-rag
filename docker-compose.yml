@@ -13,10 +13,12 @@ services:
   db:
     # Imagen oficial pgvector con PostgreSQL 16 + pgvector preinstalado
     # Disponible en Docker Hub: https://hub.docker.com/r/pgvector/pgvector
-    image: pgvector/pgvector:pg16
+    # Nombre totalmente calificado: podman sin registries por defecto resuelve "pgvector/..." como short-name y falla
+    image: docker.io/pgvector/pgvector:pg16
     container_name: wa-assistant-db
     ports:
-      - "5432:5432"
+      # Puerto del host configurable: PGPORT en .env (mismo patrón que PGPASSWORD). Ej: 5433 si 5432 está ocupado.
+      - "${PGPORT:-5432}:5432"
     environment:
       POSTGRES_USER: postgres
       # PGPASSWORD se inyecta desde .env (nunca hardcodear secretos)

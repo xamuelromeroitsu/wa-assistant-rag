@@ -2,6 +2,13 @@
 
 > Wa-Assistant RAG · registro de versiones.
 
+## [v0.0.1] - 2026-10-08
+
+### Infraestructura
+
+- Script `scripts/setup-db.sh`: levanta y verifica PostgreSQL + pgvector de forma idempotente (crea `.env`, up de compose, espera a PostgreSQL, valida esquema y extensión `vector`).
+- `docker-compose.yml`: imagen `pgvector/pgvector` con referencia totalmente calificada y puerto del host configurable vía `PGPORT`.
+
 ## [v0.0.0] - 2026-09-09 (MVP en planificación)
 
 ### Planificación

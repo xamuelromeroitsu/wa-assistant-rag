@@ -29,10 +29,12 @@ cd wa-assistant-rag
 ### Paso 2: Levantar la base de datos con Podman
 
 ```bash
-podman compose up -d
+./scripts/setup-db.sh
 ```
 
-**Verificación**: Deberías ver una línea que dice `Container ... Started`.
+El script hace: crea el `.env` desde `.env.example` si no existe, levanta el contenedor (`podman compose up -d`), espera a que PostgreSQL acepte conexiones y verifica que el esquema (4 tablas + pgvector) esté aplicado.
+
+**Verificación**: Deberías ver `[ OK ] Base de datos lista.`
 
 ```bash
 # Verificar que el contenedor está corriendo
