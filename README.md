@@ -207,20 +207,22 @@ Para entender a fondo cada parte del proyecto, entra en los documentos de la car
 ```
 wa-assistant-rag/
 ├── src/                  # Código fuente del bot
-│   ├── index.js          #   Punto de entrada principal
-│   ├── config.js         #   Carga y validación de configuración
+│   ├── index.js          #   Composición: arranque, WhatsApp, ciclo de vida
+│   ├── config.js         #   Validación de configuración (.env)
+│   ├── logger.js         #   Logging con formato estándar
+│   ├── errors.js         #   Códigos de error y mensajes amigables
 │   ├── db.js             #   Conexión a PostgreSQL
 │   ├── ollama.js         #   Cliente de Ollama (IA)
+│   ├── server.js         #   Servidor interno (GET /health)
+│   ├── domain/           #   Lógica pura: hashing, chunking, mensajes, contexto, prompt
 │   ├── handlers/         #   Lógica de los mensajes entrantes
 │   │   └── message.js
 │   └── rag/              #   Sistema RAG (ingesta y búsqueda)
 │       ├── ingest.js
 │       └── search.js
-├── docs/                 # Documentación completa en español
+├── tests/                # Pruebas automatizadas (unitarias, sin servicios externos)
 ├── scripts/              # Scripts auxiliares (SQL de inicialización)
 │   └── init-db.sql
-├── tests/                # Pruebas automatizadas
-├── container/            # Recursos de Podman/Contenedores
 ├── docker-compose.yml    # Definición de PostgreSQL + pgvector
 ├── .env.example          # Plantilla de configuración
 └── README.md             # Este documento

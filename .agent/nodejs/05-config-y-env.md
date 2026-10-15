@@ -45,6 +45,18 @@ copy .env.example .env
 |---|---|---|---|
 | `PORT` | `3000` | Puerto del servidor HTTP interno | ❌ No |
 
+### RAG
+
+| Variable | Default | Descripción | Requerida |
+|---|---|---|---|
+| `TOP_K` | `5` | Cantidad de fragmentos recuperados por pregunta | ❌ No |
+
+### Logging
+
+| Variable | Default | Descripción | Requerida |
+|---|---|---|---|
+| `LOG_LEVEL` | `INFO` | Nivel mínimo de log: `DEBUG`, `INFO`, `WARN`, `ERROR` | ❌ No |
+
 ### WhatsApp
 
 | Variable | Default | Descripción | Requerida |
@@ -53,36 +65,30 @@ copy .env.example .env
 
 ## Carga y validación de configuración
 
-La carga se realiza en `config.js` con el siguiente orden:
+La carga se realiza en dos pasos: `src/index.js` hace `dotenv.config()` y luego llama a `loadConfig(env)` de `src/config.js`:
 
 ```javascript
-// 1. Carga variables de entorno desde .env
-require('dotenv').config();
-
-// 2. Validación de variables requeridas
-const required = ['PGHOST', 'PGPORT', 'PGUSER', 'PGPASSWORD', 'PGDATABASE', 'OLLAMA_HOST', 'OLLAMA_MODEL', 'EMBEDDING_MODEL'];
-for (const key of required) {
-  if (!process.env[key]) {
-    throw new Error(`Variable de entorno requerida no definida: ${key}`);
+// src/config.js — función pura, testeable sin archivo .env
+export function loadConfig(env = process.env) {
+  // 1. Validación de variables requeridas
+  const required = ['PGHOST', 'PGPORT', 'PGUSER', 'PGPASSWORD', 'PGDATABASE', 'OLLAMA_HOST', 'OLLAMA_MODEL', 'EMBEDDING_MODEL'];
+  const missing = required.filter((key) => !env[key]);
+  if (missing.length) {
+    throw new AppError('ERR_CONFIG_001', { message: `Variables no definidas: ${missing.join(', ')}` });
   }
+
+  // 2. Conversión tipada + defaults (PORT, TOP_K, LOG_LEVEL)
+  return {
+    database: { host: env.PGHOST, port: parseInt(env.PGPORT, 10), user: env.PGUSER, password: env.PGPASSWORD, database: env.PGDATABASE },
+    ollama: { host: env.OLLAMA_HOST, model: env.OLLAMA_MODEL, embeddingModel: env.EMBEDDING_MODEL },
+    server: { port: parseInt(env.PORT ?? '3000', 10) },
+    rag: { topK: parseInt(env.TOP_K ?? '5', 10) },
+    logging: { level: (env.LOG_LEVEL ?? 'INFO').toUpperCase() },
+  };
 }
-
-// 3. Exporta configuración tipada
-module.exports = {
-  database: {
-    host: process.env.PGHOST,
-    port: parseInt(process.env.PGPORT),
-    user: process.env.PGUSER,
-    password: process.env.PGPASSWORD,
-    database: process.env.PGDATABASE
-  },
-  ollama: {
-    host: process.env.OLLAMA_HOST,
-    model: process.env.OLLAMA_MODEL,
-    embeddingModel: process.env.EMBEDDING_MODEL
-  }
-};
 ```
+
+Si falta algo, se lanza `ERR_CONFIG_001` con mensaje amigable y el proceso termina antes de conectarse a nada.
 
 ## Reglas de configuración
 
@@ -114,6 +120,12 @@ EMBEDDING_MODEL=nomic-embed-text
 
 # ---- Servidor interno ----
 PORT=3000
+
+# ---- RAG ----
+TOP_K=5
+
+# ---- Logging ----
+LOG_LEVEL=DEBUG
 ```
 
 ## Validación de entorno
