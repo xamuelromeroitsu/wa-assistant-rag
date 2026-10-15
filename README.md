@@ -199,6 +199,7 @@ Para entender a fondo cada parte del proyecto, entra en los documentos de la car
 | [docs/06_cloud_api_migration.md](docs/06_cloud_api_migration.md) | Migración futura a la WhatsApp Cloud API de Meta. |
 | [docs/07_testing.md](docs/07_testing.md) | Estrategia y guía de pruebas. |
 | [docs/08_roadmap.md](docs/08_roadmap.md) | Plan de trabajo (metodología Scrum) y MVP. |
+| [.agent/architecture/04-analisis-src.md](.agent/architecture/04-analisis-src.md) | 🔬 Análisis del código `src/`: puntos fuertes, debilidades y hoja de ruta de escalabilidad. |
 
 ---
 

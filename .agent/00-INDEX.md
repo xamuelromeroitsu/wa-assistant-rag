@@ -54,7 +54,7 @@ wa-assistant-rag/
 |---|---|---|---|
 | 1 | [Producto](product/) | Product brief, alcance MVP, especificación funcional y técnica | 4 |
 | 2 | [Procesos](processes/) | Scrum, definition of done, convenciones de trabajo | 3 |
-| 3 | [Arquitectura](architecture/) | Vista general, flujo de datos, decisiones (ADRs) | 3 |
+| 3 | [Arquitectura](architecture/) | Vista general, flujo de datos, decisiones (ADRs) y análisis de `src/` | 4 |
 | 4 | [APIs](apis/) | Ollama, API interna, whatsapp-web.js, Cloud API | 4 |
 | 5 | [Base de datos](database/) | Esquema, migraciones, SQL, índices, backups | 5 |
 | 6 | [Node.js](nodejs/) | Módulos, flujo de ejecución, errores, scripts, env | 5 |
@@ -91,6 +91,7 @@ wa-assistant-rag/
 | `docs/architecture/01-architecture.md` | Pendiente | Alta | Técnico |
 | `docs/architecture/02-flujo-datos.md` | Pendiente | Alta | Técnico |
 | `docs/architecture/03-adr.md` | Pendiente | Media | Técnico |
+| `docs/architecture/04-analisis-src.md` | Listo | Alta | Equipo |
 | `docs/apis/01-ollama-local.md` | Pendiente | Media | Técnico |
 | `docs/apis/02-internal-api.md` | Pendiente | Media | Técnico |
 | `docs/apis/03-whatsapp-webjs.md` | Pendiente | Media | Técnico |

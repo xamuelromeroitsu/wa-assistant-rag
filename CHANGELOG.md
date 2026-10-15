@@ -2,6 +2,13 @@
 
 > Wa-Assistant RAG · registro de versiones.
 
+## [Sin publicar]
+
+### Documentación
+
+- Nuevo `.agent/architecture/04-analisis-src.md`: auditoría de `src/` con puntos fuertes, debilidades (umbral de distancia ausente, chunking sin overlap, sin rate-limiting ni caché de embeddings, ingesta sin transacción, tabla `sessions` sin uso) y hoja de ruta de escalabilidad en 4 fases.
+- `README.md` y `.agent/00-INDEX.md` actualizados con el enlace al análisis.
+
 ## [v0.1.0] - 2026-10-15
 
 ### Código fuente (`src/`)
