@@ -1,6 +1,6 @@
 {
   "name": "wa-assistant-rag",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Asistente de WhatsApp con RAG: PostgreSQL + pgvector y Ollama",
   "type": "module",
   "private": true,

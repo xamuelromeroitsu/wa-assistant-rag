@@ -2,9 +2,10 @@
 
 ## Estado real del repo (verificado)
 
-- Es un repo de **documentación + infraestructura de BD**; el código del bot **aún no existe**. No hay `src/`, `package.json`, `tests/`, `LICENSE` ni `.github/` pese a que README y `docs/00-INDEX.md` los describen.
-- Por tanto `npm run dev`, `npm run lint`, `npm test` **aún no funcionan** (están planificados en `docs/nodejs/04-scripts-npm.md`). No los ejecutes ni los afirmes como verificados hasta que exista `package.json`.
-- Única rama real: `main`. No existe `develop` (aunque `docs/processes/convenciones.md` lo exige) y el historial commitea directo a `main`. No asumas flujos git que no estén en el repo.
+- Ya existe el **código del bot** en `src/` (v0.1.0), además de `package.json`, `eslint.config.js`, `vitest.config.js` y `tests/`. Sigue sin haber `LICENSE` ni `.github/` pese a que README y `.agent/00-INDEX.md` los describen.
+- `npm run dev`, `npm run start`, `npm run ingest`, `npm run lint` y `npm test` **sí funcionan**. `npm test` corre 58 tests unitarios sin necesitar PostgreSQL/Ollama/WhatsApp; `npm run dev` exige PostgreSQL y Ollama arriba (si no, falla con mensaje amigable).
+- Arquitectura por capas: dominio puro en `src/domain/` + `src/errors.js`; infraestructura en `src/config.js`, `src/logger.js`, `src/db.js`, `src/ollama.js`, `src/server.js`; casos de uso en `src/rag/` y `src/handlers/`; composición en `src/index.js`.
+- Única rama real: `main`. No existe `develop` (aunque `.agent/processes/convenciones.md` lo exige) y el historial commitea directo a `main`. No asumas flujos git que no estén en el repo.
 
 ## Comandos que sí existen
 
@@ -33,13 +34,16 @@ Gotchas de infra:
 - Los directorios de `docs/` reales están en **inglés** (`product/`, `processes/`, `architecture/`, `database/`, `guides/`, ...), pero `docs/00-INDEX.md` enlaza rutas en español (`docs/producto/`, ...). Muchos enlaces del índice y del README apuntan a archivos inexistentes (`docs/01_architecture.md`, etc.). Al enlazar, verifica la ruta real con glob antes de escribirla.
 - Al modificar el índice, corregí (no dupliques) las rutas rotas que toques.
 
-## Arquitectura prevista (cuando se implemente `src/`)
+## Arquitectura de `src/` (implementada)
 
-Monolito modular Node.js 20+ con capas, ESM (`import`/`export`), documentado en `docs/architecture/01-architecture.md`:
+Monolito modular Node.js 20+ con capas y Clean Architecture, ESM (`import`/`export`):
 
-- `src/index.js` (entrada, sesión WhatsApp) → `src/handlers/message.js` (clasifica saludo/pregunta/comando)
-- `src/rag/ingest.js` (chunking → embeddings → pgvector), `src/rag/search.js` (top-K + contexto)
-- `src/db.js` (Pool pg, máx 10 conexiones, timeout query 5s), `src/config.js` (carga/valida `.env`), `src/ollama.js` (cliente de Ollama)
+- `src/index.js` (composición/entrada, sesión WhatsApp, cierre limpio) → `src/handlers/message.js` (clasifica saludo/pregunta/comando).
+- `src/rag/ingest.js` (chunking → embeddings → pgvector), `src/rag/search.js` (top-K + contexto).
+- Infraestructura: `src/db.js` (Pool pg, máx 10 conexiones, timeout query 5s), `src/config.js` (`loadConfig(env)` puro), `src/ollama.js` (cliente HTTP con timeouts), `src/logger.js` (formato `[YYYY-MM-DD HH:MM:SS] [LEVEL] [MÓDULO]`), `src/server.js` (`GET /health`).
+- Dominio puro (sin I/O): `src/domain/` (`hashing`, `chunking`, `message`, `context`, `prompt`) y `src/errors.js` (códigos `ERR_*` + mensajes amigables).
+
+Inyección de dependencias: los casos de uso reciben `{ db, ollama, logger }`; por eso los tests los reemplazan por dobles sin tocar infraestructura.
 
 Estilo (ver `docs/processes/convenciones.md`): 2 espacios, comillas simples `'`, `;` siempre, archivos `snake_case.js`, variables `camelCase`, constantes `UPPER_SNAKE_CASE`, logs formato `[YYYY-MM-DD HH:MM:SS] [LEVEL] [MÓDULO] msg`, errores amigables en español al usuario y detalle solo en logs.
 

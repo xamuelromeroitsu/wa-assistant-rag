@@ -15,17 +15,22 @@ El MVP utiliza **tests unitarios** para los módulos críticos. La estrategia cu
 
 ```
 tests/
-├── unit/
-│   ├── handlers/
-│   │   └── message.test.js
-│   ├── rag/
-│   │   ├── ingest.test.js
-│   │   └── search.test.js
-│   └── config.test.js
-├── fixtures/
-│   └── documento-prueba.pdf
-└── helpers/
-    └── db-test-helper.js
+└── unit/
+    ├── config.test.js          # .env.example + loadConfig(env)
+    ├── errors.test.js          # AppError, códigos y mensajes amigables
+    ├── logger.test.js          # Formato y filtrado por nivel
+    ├── ollama.test.js          # Cliente HTTP: éxito, timeout, 404, dimensión
+    ├── domain/
+    │   ├── hashing.test.js
+    │   ├── chunking.test.js
+    │   ├── message.test.js
+    │   ├── context.test.js
+    │   └── prompt.test.js
+    ├── handlers/
+    │   └── message.test.js     # Casos de uso con dobles inyectados
+    └── rag/
+        ├── ingest.test.js
+        └── search.test.js
 ```
 
 ## Types de tests
@@ -60,8 +65,8 @@ npm test
 # Ejecutar tests con coverage
 npm test -- --coverage
 
-# Ejecutar un test específico
-npm test -- --grep "handlers"
+# Ejecutar los tests que coincidan con un texto
+npm test -- -t "handlers"
 ```
 
 ## Convenciones de testing
