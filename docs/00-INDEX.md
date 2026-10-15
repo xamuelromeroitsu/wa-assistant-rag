@@ -1,27 +1,27 @@
-# 🧭 Índice de documentación
+# 🧭 Documentation Index
 
-> Wa-Assistant RAG · guía maestra de la documentación del proyecto.
+> Wa-Assistant RAG · master guide of the project documentation.
 
-| Metadatos | Valor |
+| Metadata | Value |
 |---|---|
-| Estado | [En revisión](docs/procesos/definition-of-done.md) |
-| Última actualización | 2026-09-09 |
-| Versión asociada | v0.0.0 (MVP en planificación) |
-| Dueño | Equipo |
+| Status | [Under review](processes/definition-of-done.md) |
+| Last updated | 2026-09-09 |
+| Version | v0.0.0 (MVP in planning) |
+| Owner | Team |
 
-## Cómo navegar estos documentos
+## How to navigate these documents
 
-La documentación está organizada en una jerarquía lógica, del nivel de negocio al nivel operativo:
+Documentation is organized hierarchically, from the business level to the operational level:
 
-1. **Producto** — qué se construye y por qué (visión, alcance, especificaciones).
-2. **Procesos** — cómo se trabaja (Scrum, criterios de terminado, convenciones).
-3. **Técnica** — cómo está diseñado el sistema (arquitectura, APIs, base de datos, Node.js).
-4. **Guías** — cómo se usa cada pieza (setup, RAG, ingesta, testing).
-5. **Plan y operación** — cuándo llega cada cosa y cómo se opera día a día.
+1. **Product** — what is being built and why (vision, scope, specifications).
+2. **Processes** — how we work (Scrum, definition of done, conventions).
+3. **Technical** — how the system is designed (architecture, APIs, database, Node.js).
+4. **Guides** — how to use each piece (setup, RAG, ingestion, testing).
+5. **Plan and Operation** — when each thing arrives and how it is operated day by day.
 
-> Empezá por el [README](../README.md) para la vista general y por este índice para profundizar en cualquier tema.
+> Start with the [README](../README.md) for the overview and this index to go deeper into any topic.
 
-## Mapa del proyecto
+## Project Map
 
 ```
 wa-assistant-rag/
@@ -29,104 +29,166 @@ wa-assistant-rag/
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── LICENSE
+├── .env.example
+├── package.json
+├── docker-compose.yml
 ├── .github/
 │   ├── workflows/ci.yml
 │   ├── ISSUE_TEMPLATE/
+│   │   ├── bug.md
+│   │   └── historia.md
 │   └── pull_request_template.md
-└── docs/
-    ├── 00-INDEX.md
-    ├── producto/
-    ├── procesos/
-    ├── arquitectura/
-    ├── apis/
-    ├── base-de-datos/
-    ├── nodejs/
-    ├── guias/
-    ├── usuario/
-    ├── roadmap/
-    ├── operacion/
-    └── futuro/
+├── src/
+│   ├── index.js
+│   ├── config.js
+│   ├── db.js
+│   ├── ollama.js
+│   ├── handlers/
+│   │   └── message.js
+│   └── rag/
+│       ├── ingest.js
+│       └── search.js
+├── scripts/
+│   └── init-db.sql
+├── docs/
+│   ├── 00-INDEX.md
+│   ├── product/
+│   │   ├── 01-product-brief.md
+│   │   ├── 02-mvp-scope.md
+│   │   ├── 03-functional-spec.md
+│   │   └── 04-technical-spec.md
+│   ├── processes/
+│   │   ├── scrum.md
+│   │   ├── definition-of-done.md
+│   │   └── convenciones.md
+│   ├── architecture/
+│   │   ├── 01-architecture.md
+│   │   ├── 02-flujo-datos.md
+│   │   └── 03-adr.md
+│   ├── apis/
+│   │   ├── 01-ollama-local.md
+│   │   ├── 02-internal-api.md
+│   │   ├── 03-whatsapp-webjs.md
+│   │   └── 04-cloud-api.md
+│   ├── database/
+│   │   ├── 01-esquema.md
+│   │   ├── 02-migraciones.md
+│   │   ├── 03-consultas-sql.md
+│   │   ├── 04-indices-y-rendimiento.md
+│   │   └── 05-backups.md
+│   ├── nodejs/
+│   │   ├── 01-estructura-modulos.md
+│   │   ├── 02-flujo-ejecucion.md
+│   │   ├── 03-error-handling.md
+│   │   ├── 04-scripts-npm.md
+│   │   └── 05-config-y-env.md
+│   ├── guides/
+│   │   ├── setup-and-env.md
+│   │   ├── rag-pipeline.md
+│   │   ├── ingesta-documentos.md
+│   │   └── testing.md
+│   ├── roadmap/
+│   │   ├── 00-roadmap.md
+│   │   ├── 01-mvp-corto-plazo.md
+│   │   ├── 02-mediano-plazo.md
+│   │   ├── 03-largo-plazo.md
+│   │   └── backlog.md
+│   ├── operations/
+│   │   ├── runbook.md
+│   │   ├── troubleshooting.md
+│   │   └── seguridad-privacidad.md
+│   ├── user/
+│   │   ├── guia-uso.md
+│   │   └── preguntas-frecuentes.md
+│   └── future/
+│       ├── 00-roadmap.md
+│       └── 01-roadmap.md
 ```
 
-## Categorías
+## Categories
 
-| # | Categoría | Contenido | Docs |
+| # | Category | Content | Docs |
 |---|---|---|---|
-| 1 | [Producto](docs/producto/) | Product brief, alcance MVP, especificación funcional y técnica | 4 |
-| 2 | [Procesos](docs/procesos/) | Scrum, definition of done, convenciones de trabajo | 3 |
-| 3 | [Arquitectura](docs/arquitectura/) | Vista general, flujo de datos, decisiones (ADRs) | 3 |
-| 4 | [APIs](docs/apis/) | Ollama, API interna, whatsapp-web.js, Cloud API | 4 |
-| 5 | [Base de datos](docs/base-de-datos/) | Esquema, migraciones, SQL, índices, backups | 5 |
-| 6 | [Node.js](docs/nodejs/) | Módulos, flujo de ejecución, errores, scripts, env | 5 |
-| 7 | [Guías](docs/guias/) | Setup, pipeline RAG, ingesta de documentos, testing | 4 |
-| 8 | [Usuario](docs/usuario/) | Guía de uso y preguntas frecuentes del bot | 2 |
-| 9 | [Roadmap](docs/roadmap/) | Resumen ejecutivo, 3 horizontes, backlog | 5 |
-| 10 | [Operación](docs/operacion/) | Runbook, troubleshooting, seguridad y privacidad | 3 |
-| 11 | [Futuro](docs/futuro/) | Migración a WhatsApp Cloud API | 1 |
+| 1 | [Product](product/01-product-brief.md) | Product brief, MVP scope, functional and technical specifications | 4 |
+| 2 | [Processes](processes/scrum.md) | Scrum, definition of done, work conventions | 3 |
+| 3 | [Architecture](architecture/01-architecture.md) | System overview, data flow, architectural decisions (ADRs) | 3 |
+| 4 | [APIs](apis/01-ollama-local.md) | Ollama, API interna, whatsapp-web.js, Cloud API | 4 |
+| 5 | [Database](database/01-esquema.md) | Schema, migrations, SQL, indexes, backups | 5 |
+| 6 | [Node.js](nodejs/01-estructura-modulos.md) | Modules, execution flow, errors, scripts, env config | 5 |
+| 7 | [Guides](guides/setup-and-env.md) | Setup, RAG pipeline, document ingestion, testing | 4 |
+| 8 | [User](user/guia-uso.md) | Usage guide and frequently asked questions | 2 |
+| 9 | [Roadmap](roadmap/00-roadmap.md) | Executive summary, 3 horizons, backlog | 5 |
+| 10 | [Operations](operations/runbook.md) | Runbook, troubleshooting, security and privacy | 3 |
+| 11 | [Future](future/01-roadmap.md) | Migration to WhatsApp Cloud API | 2 |
 
-## Archivos de la raíz y CI
+## Root Files and CI
 
-| Archivo | Contenido |
+| File | Content |
 |---|---|
-| [README](../README.md) | Puerta de entrada: qué hace el proyecto y cómo arrancar |
-| [CHANGELOG](../CHANGELOG.md) | Registro de versiones (semver) |
-| [CONTRIBUTING](../CONTRIBUTING.md) | Guía de contribución y flujo de trabajo |
-| [LICENSE](../LICENSE) | Licencia del proyecto (MIT) |
-| [.github/workflows/ci.yml](../.github/workflows/ci.yml) | Pipeline de CI: lint + test en cada PR |
-| [.github/ISSUE_TEMPLATE/](../.github/ISSUE_TEMPLATE/) | Plantillas de historias de usuario y bugs |
-| [.github/pull_request_template.md](../.github/pull_request_template.md) | Plantilla de pull requests |
+| [README](../README.md) | Entry point: what the project does and how to start |
+| [CHANGELOG](../CHANGELOG.md) | Version history (semver) |
+| [CONTRIBUTING](../CONTRIBUTING.md) | Contribution guide and workflow |
+| [LICENSE](../LICENSE) | MIT License |
+| [.env.example](../.env.example) | Configuration template |
+| [package.json](../package.json) | Dependencies and npm scripts |
+| [docker-compose.yml](../docker-compose.yml) | PostgreSQL + pgvector definition |
+| [scripts/init-db.sql](../scripts/init-db.sql) | Database initialization script |
+| [.github/workflows/ci.yml](../.github/workflows/ci.yml) | CI pipeline: lint + tests on every PR |
+| [.github/ISSUE_TEMPLATE/](../.github/ISSUE_TEMPLATE/) | User story and bug issue templates |
+| [.github/pull_request_template.md](../.github/pull_request_template.md) | Pull request template |
 
-## Estado y prioridad de la documentación
+## Status and Priority
 
-| Documento | Estado | Prioridad de creación | Dueño |
+| Document | Status | Priority | Owner |
 |---|---|---|---|
-| `docs/00-INDEX.md` | Listo | Alta | Equipo |
-| `docs/producto/01-product-brief.md` | Listo | Alta | Product Owner |
-| `docs/producto/02-mvp-scope.md` | Listo | Alta | Product Owner |
-| `docs/producto/03-functional-spec.md` | Listo | Alta | Product Owner |
-| `docs/producto/04-technical-spec.md` | Listo | Alta | Técnico |
-| `docs/procesos/scrum.md` | Pendiente | Alta | Scrum Master |
-| `docs/procesos/definition-of-done.md` | Pendiente | Media | Scrum Master |
-| `docs/procesos/convenciones.md` | Pendiente | Media | Equipo |
-| `docs/arquitectura/01-architecture.md` | Pendiente | Alta | Técnico |
-| `docs/arquitectura/02-flujo-datos.md` | Pendiente | Alta | Técnico |
-| `docs/arquitectura/03-adr.md` | Pendiente | Media | Técnico |
-| `docs/apis/01-ollama-api.md` | Pendiente | Media | Técnico |
-| `docs/apis/02-internal-api.md` | Pendiente | Media | Técnico |
-| `docs/apis/03-whatsapp-webjs.md` | Pendiente | Media | Técnico |
-| `docs/apis/04-cloud-api.md` | Pendiente | Baja | Técnico |
-| `docs/base-de-datos/01-esquema.md` | Pendiente | Alta | Técnico |
-| `docs/base-de-datos/02-migraciones.md` | Pendiente | Media | Técnico |
-| `docs/base-de-datos/03-consultas-sql.md` | Pendiente | Media | Técnico |
-| `docs/base-de-datos/04-indices-y-rendimiento.md` | Pendiente | Baja | Técnico |
-| `docs/base-de-datos/05-backups.md` | Pendiente | Baja | Técnico |
-| `docs/nodejs/01-estructura-modulos.md` | Pendiente | Alta | Técnico |
-| `docs/nodejs/02-flujo-ejecucion.md` | Pendiente | Media | Técnico |
-| `docs/nodejs/03-error-handling.md` | Pendiente | Media | Técnico |
-| `docs/nodejs/04-scripts-npm.md` | Pendiente | Media | Técnico |
-| `docs/nodejs/05-config-y-env.md` | Pendiente | Media | Técnico |
-| `docs/guias/setup-and-env.md` | Pendiente | Alta | Técnico |
-| `docs/guias/rag-pipeline.md` | Pendiente | Alta | Técnico |
-| `docs/guias/ingesta-documentos.md` | Pendiente | Media | Técnico |
-| `docs/guias/testing.md` | Pendiente | Media | Técnico |
-| `docs/usuario/guia-uso.md` | Pendiente | Baja | Product Owner |
-| `docs/usuario/preguntas-frecuentes.md` | Pendiente | Baja | Product Owner |
-| `docs/roadmap/00-roadmap.md` | Pendiente | Alta | Product Owner |
-| `docs/roadmap/01-mvp-corto-plazo.md` | Pendiente | Alta | Product Owner |
-| `docs/roadmap/02-mediano-plazo.md` | Pendiente | Media | Product Owner |
-| `docs/roadmap/03-largo-plazo.md` | Pendiente | Baja | Product Owner |
-| `docs/roadmap/backlog.md` | Pendiente | Alta | Product Owner |
-| `docs/operacion/runbook.md` | Pendiente | Baja | Técnico |
-| `docs/operacion/troubleshooting.md` | Pendiente | Media | Técnico |
-| `docs/operacion/seguridad-privacidad.md` | Pendiente | Media | Técnico |
-| `docs/futuro/migration-cloud-api.md` | Pendiente | Baja | Técnico |
+| `docs/00-INDEX.md` | Ready | High | Team |
+| `docs/product/01-product-brief.md` | Ready | High | Product Owner |
+| `docs/product/02-mvp-scope.md` | Ready | High | Product Owner |
+| `docs/product/03-functional-spec.md` | Ready | High | Product Owner |
+| `docs/product/04-technical-spec.md` | Ready | High | Technical |
+| `docs/processes/scrum.md` | Ready | High | Scrum Master |
+| `docs/processes/definition-of-done.md` | Ready | Medium | Scrum Master |
+| `docs/processes/convenciones.md` | Ready | Medium | Team |
+| `docs/architecture/01-architecture.md` | Ready | High | Technical |
+| `docs/architecture/02-flujo-datos.md` | Ready | High | Technical |
+| `docs/architecture/03-adr.md` | Ready | Medium | Technical |
+| `docs/apis/01-ollama-local.md` | Ready | Medium | Technical |
+| `docs/apis/02-internal-api.md` | Ready | Medium | Technical |
+| `docs/apis/03-whatsapp-webjs.md` | Ready | Medium | Technical |
+| `docs/apis/04-cloud-api.md` | Pending | Low | Technical |
+| `docs/database/01-esquema.md` | Ready | High | Technical |
+| `docs/database/02-migraciones.md` | Ready | Medium | Technical |
+| `docs/database/03-consultas-sql.md` | Ready | Medium | Technical |
+| `docs/database/04-indices-y-rendimiento.md` | Ready | Low | Technical |
+| `docs/database/05-backups.md` | Ready | Low | Technical |
+| `docs/nodejs/01-estructura-modulos.md` | Ready | High | Technical |
+| `docs/nodejs/02-flujo-ejecucion.md` | Ready | Medium | Technical |
+| `docs/nodejs/03-error-handling.md` | Ready | Medium | Technical |
+| `docs/nodejs/04-scripts-npm.md` | Ready | Medium | Technical |
+| `docs/nodejs/05-config-y-env.md` | Ready | Medium | Technical |
+| `docs/guides/setup-and-env.md` | Ready | High | Technical |
+| `docs/guides/rag-pipeline.md` | Ready | High | Technical |
+| `docs/guides/ingesta-documentos.md` | Ready | Medium | Technical |
+| `docs/guides/testing.md` | Ready | Medium | Technical |
+| `docs/user/guia-uso.md` | Ready | Low | Product Owner |
+| `docs/user/preguntas-frecuentes.md` | Ready | Low | Product Owner |
+| `docs/roadmap/00-roadmap.md` | Ready | High | Product Owner |
+| `docs/roadmap/01-mvp-corto-plazo.md` | Ready | High | Product Owner |
+| `docs/roadmap/02-mediano-plazo.md` | Pending | Medium | Product Owner |
+| `docs/roadmap/03-largo-plazo.md` | Pending | Low | Product Owner |
+| `docs/roadmap/backlog.md` | Ready | High | Product Owner |
+| `docs/operations/runbook.md` | Ready | Low | Technical |
+| `docs/operations/troubleshooting.md` | Ready | Medium | Technical |
+| `docs/operations/seguridad-privacidad.md` | Ready | Medium | Technical |
+| `docs/future/00-roadmap.md` | Pending | Low | Technical |
+| `docs/future/01-roadmap.md` | Pending | Low | Technical |
 
-## Contribuir a la documentación
+## Contributing to Documentation
 
-- **Regla de oro:** al agregar, mover o renombrar un documento, actualizá este índice en el mismo commit.
-- Usá la [plantilla de historia de usuario](../.github/ISSUE_TEMPLATE/historia.md) para reportar documentación faltante.
-- Seguí las [convenciones](docs/procesos/convenciones.md) de estilo y formato.
+- **Golden rule:** when adding, moving, or renaming a document, update this index in the same commit.
+- Use the [user story template](../.github/ISSUE_TEMPLATE/historia.md) to report missing documentation.
+- Follow the [conventions](processes/convenciones.md) for style and format.
 
 ---
 
-*Este documento es la puerta de entrada a la documentación del proyecto. Al finalizar cada paso de creación, actualizá su estado y prioridad.*
+*This document is the entry point to the project documentation. After completing each step, update its status and priority.*
