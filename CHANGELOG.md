@@ -4,10 +4,33 @@
 
 ## [Sin publicar]
 
+### Verificación del MVP (H4, H5)
+
+- **H4 cerrado con evidencia real**: `tests/fixtures/` con un PDF real (encabezados + tabla) y un TXT de nutrición; nuevo `tests/integration/rag/ingest-h4.test.js` (8 casos) que verifica extracción del PDF, chunking sin pérdida de contenido, idempotencia por hash, errores parciales sin abortar el lote, disponibilidad de los fragmentos para H3 **sin reiniciar el bot** y la advertencia de H5.
+- **H5 cerrado**: si `EMBEDDING_MODEL` no coincide con los embeddings almacenados, la búsqueda ahora lo advierte explícitamente (`src/rag/search.js` + `src/db.js#listEmbeddingModels`) en lugar de devolver cero resultados en silencio.
+- **CI**: `.github/workflows/ci.yml` corre `npm run lint` + `npm test` en cada push/PR a `main` (matriz Ubuntu + Windows, Node 20/22).
+
+### Correcciones detectadas por la demo con servicios reales
+
+- **Ingesta transaccional** (`src/rag/ingest.js` + `src/db.js#withTransaction`): los embeddings se generan *antes* de tocar la BD y la persistencia (documento + fragmentos + embeddings) va en una transacción con rollback. Una corrida fallida ya no deja documentos huérfanos (ver `.agent/guides/demo-mvp.md`).
+- **Mensaje de error 404 de Ollama corregido**: cuando falta el modelo de embeddings sugiere `ollama pull nomic-embed-text` (antes siempre sugería el modelo de generación).
+- **Timeouts de Ollama configurables**: `OLLAMA_GENERATE_TIMEOUT_MS`, `OLLAMA_EMBEDDINGS_TIMEOUT_MS` y `OLLAMA_TAGS_TIMEOUT_MS` (defaults 30000/15000/5000). El default de 30 s quedaba corto en CPU con prompts RAG largos.
+
+### Herramientas nuevas
+
+- `scripts/ask.js`: hace una pregunta al asistente sin WhatsApp (`node scripts/ask.js "<pregunta>"`).
+- `scripts/db-status.js`: estado de la BD (documentos, fragmentos, modelos de embeddings) con aviso de modelo no coincidente.
+
 ### Documentación
 
-- Nuevo `.agent/architecture/04-analisis-src.md`: auditoría de `src/` con puntos fuertes, debilidades (umbral de distancia ausente, chunking sin overlap, sin rate-limiting ni caché de embeddings, ingesta sin transacción, tabla `sessions` sin uso) y hoja de ruta de escalabilidad en 4 fases.
-- `README.md` y `.agent/00-INDEX.md` actualizados con el enlace al análisis.
+- Nuevo `.agent/guides/demo-mvp.md`: corrida manual documentada contra PostgreSQL 16 + pgvector y Ollama reales (2 documentos, 6 fragmentos, respuesta fundamentada, idempotencia verificada).
+- Nuevo `.agent/architecture/04-analisis-src.md`: auditoría de `src/` con puntos fuertes, debilidades (umbral de distancia ausente, chunking sin overlap, sin rate-limiting ni caché de embeddings, tabla `sessions` sin uso) y hoja de ruta de escalabilidad en 4 fases.
+- `README.md`: roadmap H4/H5 marcados como completos, enlaces de documentación corregidos a las rutas reales de `.agent/`, estructura actualizada (scripts, CI).
+- **Tests**: 96 en total (eran 58); `npm run lint` limpio.
+
+### Notas de entorno
+
+- `.env` creado en esta máquina con `PGPORT=5433` (el 5432 local estaba ocupado por otra instancia de PostgreSQL) y `OLLAMA_GENERATE_TIMEOUT_MS=180000`.
 
 ## [v0.1.0] - 2026-10-15
 

@@ -187,19 +187,20 @@ EMBEDDING_MODEL=nomic-embed-text
 
 ## 📚 Documentación completa
 
-Para entender a fondo cada parte del proyecto, entra en los documentos de la carpeta `docs/`:
+Para entender a fondo cada parte del proyecto, entrá en la documentación de la carpeta `.agent/`:
 
 | Documento | Contenido |
 |---|---|
-| [docs/01_architecture.md](docs/01_architecture.md) | Arquitectura del sistema, componentes y diseño. |
-| [docs/02_setup_and_env.md](docs/02_setup_and_env.md) | Instalación detallada, configuración del entorno y primer uso. |
-| [docs/03_rag_pipeline.md](docs/03_rag_pipeline.md) | Cómo funciona el RAG: ingesta, embeddings, y búsqueda. |
-| [docs/04_ollama_config.md](docs/04_ollama_config.md) | Modelos recomendados y configuración de Ollama. |
-| [docs/05_whatsapp_webjs.md](docs/05_whatsapp_webjs.md) | Conexión con WhatsApp, sesión y manejo de mensajes. |
-| [docs/06_cloud_api_migration.md](docs/06_cloud_api_migration.md) | Migración futura a la WhatsApp Cloud API de Meta. |
-| [docs/07_testing.md](docs/07_testing.md) | Estrategia y guía de pruebas. |
-| [docs/08_roadmap.md](docs/08_roadmap.md) | Plan de trabajo (metodología Scrum) y MVP. |
+| [.agent/architecture/01-architecture.md](.agent/architecture/01-architecture.md) | Arquitectura del sistema, componentes y diseño. |
+| [.agent/guides/setup-and-env.md](.agent/guides/setup-and-env.md) | Instalación detallada, configuración del entorno y primer uso. |
+| [.agent/guides/rag-pipeline.md](.agent/guides/rag-pipeline.md) | Cómo funciona el RAG: ingesta, embeddings, y búsqueda. |
+| [.agent/apis/01-ollama-local.md](.agent/apis/01-ollama-local.md) | Integración con Ollama y modelos recomendados. |
+| [.agent/apis/03-whatsapp-webjs.md](.agent/apis/03-whatsapp-webjs.md) | Conexión con WhatsApp, sesión y manejo de mensajes. |
+| [.agent/future/00-roadmap.md](.agent/future/00-roadmap.md) | Migración futura a la WhatsApp Cloud API de Meta. |
+| [.agent/guides/testing.md](.agent/guides/testing.md) | Estrategia y guía de pruebas. |
+| [.agent/roadmap/01-mvp-corto-plazo.md](.agent/roadmap/01-mvp-corto-plazo.md) | Plan de trabajo (metodología Scrum) y MVP. |
 | [.agent/architecture/04-analisis-src.md](.agent/architecture/04-analisis-src.md) | 🔬 Análisis del código `src/`: puntos fuertes, debilidades y hoja de ruta de escalabilidad. |
+| [.agent/guides/demo-mvp.md](.agent/guides/demo-mvp.md) | 🧪 Demo del MVP ejecutada con PostgreSQL + Ollama reales (evidencia de H1–H5). |
 
 ---
 
@@ -221,9 +222,12 @@ wa-assistant-rag/
 │   └── rag/              #   Sistema RAG (ingesta y búsqueda)
 │       ├── ingest.js
 │       └── search.js
-├── tests/                # Pruebas automatizadas (unitarias, sin servicios externos)
-├── scripts/              # Scripts auxiliares (SQL de inicialización)
-│   └── init-db.sql
+├── tests/                # Pruebas automatizadas (unitarias + integración con fixtures reales)
+├── scripts/              # Scripts auxiliares
+│   ├── init-db.sql       #   Inicialización del esquema PostgreSQL + pgvector
+│   ├── db-status.js      #   Estado de la BD: documentos, fragmentos y modelos de embeddings
+│   └── ask.js            #   Probar una pregunta sin WhatsApp
+├── .github/              # CI (lint + tests en cada push/PR a main)
 ├── docker-compose.yml    # Definición de PostgreSQL + pgvector
 ├── .env.example          # Plantilla de configuración
 └── README.md             # Este documento
@@ -233,15 +237,17 @@ wa-assistant-rag/
 
 ## 🗺️ Roadmap
 
-El proyecto se desarrolla con **metodología Scrum**. El MVP (producto mínimo viable) ya está definido y priorizado en el [roadmap](docs/08_roadmap.md):
+El proyecto se desarrolla con **metodología Scrum**. El MVP (producto mínimo viable) ya está definido y priorizado en el [roadmap](.agent/roadmap/01-mvp-corto-plazo.md):
 
 - ✅ **Historia 1:** Conectar el bot a WhatsApp escaneando un QR.
 - ✅ **Historia 2:** Responder a un saludo ("hola") en menos de 3 segundos.
 - ✅ **Historia 3:** Responder preguntas usando el contenido de los documentos cargados.
-- ⏳ **Historia 4:** Cargar documentos (PDF/TXT) a la base de datos.
-- ⏳ **Historia 5:** Cambiar el modelo de IA con una variable de entorno.
+- ✅ **Historia 4:** Cargar documentos (PDF/TXT) a la base de datos.
+- ✅ **Historia 5:** Cambiar el modelo de IA con una variable de entorno.
 
-Consulta [docs/08_roadmap.md](docs/08_roadmap.md) para ver las fases, tareas y criterios de "terminado".
+Evidencia de la corrida con servicios reales: [demo del MVP](.agent/guides/demo-mvp.md).
+
+Consulta [.agent/roadmap/01-mvp-corto-plazo.md](.agent/roadmap/01-mvp-corto-plazo.md) para ver las fases, tareas y criterios de "terminado".
 
 ---
 

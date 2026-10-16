@@ -4,19 +4,19 @@
 
 | Metadatos | Valor |
 |---|---|
-| Estado | [En revisión](processes/definition-of-done.md) |
-| Última actualización | 2026-09-09 |
-| Versión asociada | v0.0.0 (MVP en planificación) |
+| Estado | Listo |
+| Última actualización | 2026-10-15 |
+| Versión asociada | v0.1.0 |
 | Dueño | Equipo |
 
 ## Cómo navegar estos documentos
 
-La documentación está organizada en una jerarquía lógica, del nivel de negocio al nivel operativo:
+La documentación vive en la carpeta `.agent/` y está organizada en una jerarquía lógica, del nivel de negocio al nivel operativo:
 
 1. **Producto** — qué se construye y por qué (visión, alcance, especificaciones).
 2. **Procesos** — cómo se trabaja (Scrum, criterios de terminado, convenciones).
 3. **Técnica** — cómo está diseñado el sistema (arquitectura, APIs, base de datos, Node.js).
-4. **Guías** — cómo se usa cada pieza (setup, RAG, ingesta, testing).
+4. **Guías** — cómo se usa cada pieza (setup, RAG, ingesta, testing, demo).
 5. **Plan y operación** — cuándo llega cada cosa y cómo se opera día a día.
 
 > Empezá por el [README](../README.md) para la vista general y por este índice para profundizar en cualquier tema.
@@ -29,23 +29,27 @@ wa-assistant-rag/
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── LICENSE
+├── AGENTS.md                  # Instrucciones para agentes: estado real del repo
 ├── .github/
-│   ├── workflows/ci.yml
-│   ├── ISSUE_TEMPLATE/
-│   └── pull_request_template.md
-└── docs/
-    ├── 00-INDEX.md
-    ├── product/
-    ├── processes/
-    ├── architecture/
-    ├── apis/
-    ├── database/
-    ├── nodejs/
-    ├── guides/
-    ├── user/
-    ├── roadmap/
-    ├── operations/
-    └── future/
+│   └── workflows/ci.yml       # lint + tests en cada push/PR a main
+├── .agent/                   # Documentación completa (este índice)
+│   ├── 00-INDEX.md
+│   ├── product/
+│   ├── processes/
+│   ├── architecture/
+│   ├── apis/
+│   ├── database/
+│   ├── nodejs/
+│   ├── guides/
+│   ├── user/
+│   ├── roadmap/
+│   ├── operations/
+│   └── future/
+├── src/                       # Código del asistente
+├── tests/                     # Pruebas (unitarias, integración y fixtures)
+├── scripts/                   # SQL de inicialización y utilidades de consola
+├── container/                 # Definición de PostgreSQL + pgvector
+└── docker-compose.yml
 ```
 
 ## Categorías
@@ -58,11 +62,11 @@ wa-assistant-rag/
 | 4 | [APIs](apis/) | Ollama, API interna, whatsapp-web.js, Cloud API | 4 |
 | 5 | [Base de datos](database/) | Esquema, migraciones, SQL, índices, backups | 5 |
 | 6 | [Node.js](nodejs/) | Módulos, flujo de ejecución, errores, scripts, env | 5 |
-| 7 | [Guías](guides/) | Setup, pipeline RAG, ingesta de documentos, testing | 4 |
+| 7 | [Guías](guides/) | Setup, pipeline RAG, ingesta de documentos, testing y demo del MVP | 5 |
 | 8 | [Usuario](user/) | Guía de uso y preguntas frecuentes del bot | 2 |
 | 9 | [Roadmap](roadmap/) | Resumen ejecutivo, 3 horizontes, backlog | 5 |
 | 10 | [Operación](operations/) | Runbook, troubleshooting, seguridad y privacidad | 3 |
-| 11 | [Futuro](future/) | Migración a WhatsApp Cloud API | 1 |
+| 11 | [Futuro](future/) | Migración a WhatsApp Cloud API | 2 |
 
 ## Archivos de la raíz y CI
 
@@ -72,62 +76,62 @@ wa-assistant-rag/
 | [CHANGELOG](../CHANGELOG.md) | Registro de versiones (semver) |
 | [CONTRIBUTING](../CONTRIBUTING.md) | Guía de contribución y flujo de trabajo |
 | [LICENSE](../LICENSE) | Licencia del proyecto (MIT) |
+| [AGENTS.md](../AGENTS.md) | Instrucciones para agentes: estado real del repo y convenciones |
 | [.github/workflows/ci.yml](../.github/workflows/ci.yml) | Pipeline de CI: lint + test en cada PR |
-| [.github/ISSUE_TEMPLATE/](../.github/ISSUE_TEMPLATE/) | Plantillas de historias de usuario y bugs |
-| [.github/pull_request_template.md](../.github/pull_request_template.md) | Plantilla de pull requests |
 
-## Estado y prioridad de la documentación
+## Estado de la documentación
 
-| Documento | Estado | Prioridad de creación | Dueño |
+| Documento | Estado | Prioridad | Dueño |
 |---|---|---|---|
-| `docs/00-INDEX.md` | Listo | Alta | Equipo |
-| `docs/product/01-product-brief.md` | Listo | Alta | Product Owner |
-| `docs/product/02-mvp-scope.md` | Listo | Alta | Product Owner |
-| `docs/product/03-functional-spec.md` | Listo | Alta | Product Owner |
-| `docs/product/04-technical-spec.md` | Listo | Alta | Técnico |
-| `docs/processes/scrum.md` | Pendiente | Alta | Scrum Master |
-| `docs/processes/definition-of-done.md` | Pendiente | Media | Scrum Master |
-| `docs/processes/convenciones.md` | Pendiente | Media | Equipo |
-| `docs/architecture/01-architecture.md` | Pendiente | Alta | Técnico |
-| `docs/architecture/02-flujo-datos.md` | Pendiente | Alta | Técnico |
-| `docs/architecture/03-adr.md` | Pendiente | Media | Técnico |
-| `docs/architecture/04-analisis-src.md` | Listo | Alta | Equipo |
-| `docs/apis/01-ollama-local.md` | Pendiente | Media | Técnico |
-| `docs/apis/02-internal-api.md` | Pendiente | Media | Técnico |
-| `docs/apis/03-whatsapp-webjs.md` | Pendiente | Media | Técnico |
-| `docs/apis/04-cloud-api.md` | Pendiente | Baja | Técnico |
-| `docs/database/01-esquema.md` | Pendiente | Alta | Técnico |
-| `docs/database/02-migraciones.md` | Pendiente | Media | Técnico |
-| `docs/database/03-consultas-sql.md` | Pendiente | Media | Técnico |
-| `docs/database/04-indices-y-rendimiento.md` | Pendiente | Baja | Técnico |
-| `docs/database/05-backups.md` | Pendiente | Baja | Técnico |
-| `docs/nodejs/01-estructura-modulos.md` | Pendiente | Alta | Técnico |
-| `docs/nodejs/02-flujo-ejecucion.md` | Pendiente | Media | Técnico |
-| `docs/nodejs/03-error-handling.md` | Pendiente | Media | Técnico |
-| `docs/nodejs/04-scripts-npm.md` | Pendiente | Media | Técnico |
-| `docs/nodejs/05-config-y-env.md` | Pendiente | Media | Técnico |
-| `docs/guides/setup-and-env.md` | Pendiente | Alta | Técnico |
-| `docs/guides/rag-pipeline.md` | Pendiente | Alta | Técnico |
-| `docs/guides/ingesta-documentos.md` | Pendiente | Media | Técnico |
-| `docs/guides/testing.md` | Pendiente | Media | Técnico |
-| `docs/user/guia-uso.md` | Pendiente | Baja | Product Owner |
-| `docs/user/preguntas-frecuentes.md` | Pendiente | Baja | Product Owner |
-| `docs/roadmap/00-roadmap.md` | Pendiente | Alta | Product Owner |
-| `docs/roadmap/01-mvp-corto-plazo.md` | Pendiente | Alta | Product Owner |
-| `docs/roadmap/02-mediano-plazo.md` | Pendiente | Media | Product Owner |
-| `docs/roadmap/03-largo-plazo.md` | Pendiente | Baja | Product Owner |
-| `docs/roadmap/backlog.md` | Pendiente | Alta | Product Owner |
-| `docs/operations/runbook.md` | Pendiente | Baja | Técnico |
-| `docs/operations/troubleshooting.md` | Pendiente | Media | Técnico |
-| `docs/operations/seguridad-privacidad.md` | Pendiente | Media | Técnico |
-| `docs/future/00-roadmap.md` | Pendiente | Baja | Técnico |
+| `product/01-product-brief.md` | Listo | Alta | Product Owner |
+| `product/02-mvp-scope.md` | Listo | Alta | Product Owner |
+| `product/03-functional-spec.md` | Listo | Alta | Product Owner |
+| `product/04-technical-spec.md` | Listo | Alta | Técnico |
+| `processes/scrum.md` | Listo | Alta | Scrum Master |
+| `processes/definition-of-done.md` | Listo | Media | Scrum Master |
+| `processes/convenciones.md` | Listo | Media | Equipo |
+| `architecture/01-architecture.md` | Listo | Alta | Técnico |
+| `architecture/02-flujo-datos.md` | Listo | Alta | Técnico |
+| `architecture/03-adr.md` | Listo | Media | Técnico |
+| `architecture/04-analisis-src.md` | Listo | Alta | Equipo |
+| `apis/01-ollama-local.md` | Listo | Media | Técnico |
+| `apis/02-internal-api.md` | Listo | Media | Técnico |
+| `apis/03-whatsapp-webjs.md` | Listo | Media | Técnico |
+| `apis/04-cloud-api.md` | Listo | Baja | Técnico |
+| `database/01-esquema.md` | Listo | Alta | Técnico |
+| `database/02-migraciones.md` | Listo | Media | Técnico |
+| `database/03-consultas-sql.md` | Listo | Media | Técnico |
+| `database/04-indices-y-rendimiento.md` | Listo | Baja | Técnico |
+| `database/05-backups.md` | Listo | Baja | Técnico |
+| `nodejs/01-estructura-modulos.md` | Listo | Alta | Técnico |
+| `nodejs/02-flujo-ejecucion.md` | Listo | Media | Técnico |
+| `nodejs/03-error-handling.md` | Listo | Media | Técnico |
+| `nodejs/04-scripts-npm.md` | Listo | Media | Técnico |
+| `nodejs/05-config-y-env.md` | Listo | Media | Técnico |
+| `guides/setup-and-env.md` | Listo | Alta | Técnico |
+| `guides/rag-pipeline.md` | Listo | Alta | Técnico |
+| `guides/ingesta-documentos.md` | Listo | Media | Técnico |
+| `guides/demo-mvp.md` | Listo | Alta | Equipo |
+| `guides/testing.md` | Listo | Media | Técnico |
+| `user/guia-uso.md` | Listo | Baja | Product Owner |
+| `user/preguntas-frecuentes.md` | Listo | Baja | Product Owner |
+| `roadmap/00-roadmap.md` | Listo | Alta | Product Owner |
+| `roadmap/01-mvp-corto-plazo.md` | Listo | Alta | Product Owner |
+| `roadmap/02-mediano-plazo.md` | Listo | Media | Product Owner |
+| `roadmap/03-largo-plazo.md` | Listo | Baja | Product Owner |
+| `roadmap/backlog.md` | Listo | Alta | Product Owner |
+| `operations/runbook.md` | Listo | Baja | Técnico |
+| `operations/troubleshooting.md` | Listo | Media | Técnico |
+| `operations/seguridad-privacidad.md` | Listo | Media | Técnico |
+| `future/00-roadmap.md` | Listo | Baja | Técnico |
+| `future/01-roadmap.md` | Listo | Baja | Técnico |
 
 ## Contribuir a la documentación
 
 - **Regla de oro:** al agregar, mover o renombrar un documento, actualizá este índice en el mismo commit.
-- Usá la [plantilla de historia de usuario](../.github/ISSUE_TEMPLATE/historia.md) para reportar documentación faltante.
 - Seguí las [convenciones](processes/convenciones.md) de estilo y formato.
+- Toda la documentación va en **español** (ver [CONTRIBUTING](../CONTRIBUTING.md)).
 
 ---
 
-*Este documento es la puerta de entrada a la documentación del proyecto. Al finalizar cada paso de creación, actualizá su estado y prioridad.*
+* Este documento es la puerta de entrada a la documentación del proyecto. Al finalizar cada paso de creación, actualizá su estado y prioridad.*
