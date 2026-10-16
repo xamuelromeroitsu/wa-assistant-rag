@@ -5,8 +5,9 @@
 # Dependencies
 node_modules/
 
-# Session data
+# Session data caches y codigos qr que se generan localmente
 .wwebjs_auth/
+.wwebjs_cache
 
 # Ollama cache
 .ollama/
