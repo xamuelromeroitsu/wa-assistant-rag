@@ -34,7 +34,7 @@ export function createOllamaClient(options) {
   const baseUrl = String(host).replace(/\/+$/, '');
   const limits = { ...DEFAULT_TIMEOUTS, ...timeouts };
 
-  const request = async (endpoint, { method = 'GET', body, timeoutMs }) => {
+  const request = async (endpoint, { method = 'GET', body, timeoutMs, modelName }) => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     let response;
@@ -67,8 +67,8 @@ export function createOllamaClient(options) {
     if (!response.ok) {
       if (response.status === 404) {
         throw new AppError(ERROR_CODES.OLLAMA_MODEL_NOT_FOUND, {
-          message: `Modelo no encontrado en Ollama (${endpoint}). Ejecutá: ollama pull ${model}`,
-          details: { endpoint, status: response.status },
+          message: `Modelo no encontrado en Ollama (${endpoint}). Ejecutá: ollama pull ${modelName ?? model}`,
+          details: { endpoint, status: response.status, model: modelName ?? model },
         });
       }
       throw new AppError(ERROR_CODES.OLLAMA_UNAVAILABLE, {
@@ -123,6 +123,7 @@ export function createOllamaClient(options) {
       const data = await request('/api/embeddings', {
         method: 'POST',
         timeoutMs: limits.embeddings,
+        modelName: embeddingModel,
         body: {
           model: embeddingModel,
           prompt: text,

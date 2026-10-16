@@ -15,6 +15,9 @@ const DEFAULTS = Object.freeze({
   PORT: '3000',
   TOP_K: '5',
   LOG_LEVEL: 'INFO',
+  OLLAMA_TIMEOUT_GENERATE: '30000',
+  OLLAMA_TIMEOUT_EMBEDDINGS: '15000',
+  OLLAMA_TIMEOUT_TAGS: '5000',
 });
 
 const VALID_LOG_LEVELS = Object.freeze(['DEBUG', 'INFO', 'WARN', 'ERROR']);
@@ -64,6 +67,11 @@ export function loadConfig(env = process.env) {
       host: String(env.OLLAMA_HOST).replace(/\/+$/, ''),
       model: env.OLLAMA_MODEL,
       embeddingModel: env.EMBEDDING_MODEL,
+      timeouts: Object.freeze({
+        generate: toPositiveInt(env.OLLAMA_GENERATE_TIMEOUT_MS ?? DEFAULTS.OLLAMA_TIMEOUT_GENERATE, 'OLLAMA_GENERATE_TIMEOUT_MS'),
+        embeddings: toPositiveInt(env.OLLAMA_EMBEDDINGS_TIMEOUT_MS ?? DEFAULTS.OLLAMA_TIMEOUT_EMBEDDINGS, 'OLLAMA_EMBEDDINGS_TIMEOUT_MS'),
+        tags: toPositiveInt(env.OLLAMA_TAGS_TIMEOUT_MS ?? DEFAULTS.OLLAMA_TIMEOUT_TAGS, 'OLLAMA_TAGS_TIMEOUT_MS'),
+      }),
     }),
     server: Object.freeze({
       port: toPositiveInt(env.PORT ?? DEFAULTS.PORT, 'PORT'),

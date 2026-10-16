@@ -105,29 +105,44 @@ export function createIngestService({ db, ollama, logger }) {
       });
     }
 
-    const { id: documentId } = await db.insertDocument({
-      nombre: path.basename(filePath),
-      ruta: filePath,
-      hashContenido: contentHash,
-      tamanoBytes: stats.size,
-    });
-
-    let inserted = 0;
+    // 1) Se generan TODOS los embeddings antes de tocar la BD: si Ollama falla,
+    //    no queda ningún documento por la mitad (problema del huérfano).
+    const preparados = [];
     for (let index = 0; index < chunks.length; index += 1) {
       const texto = chunks[index];
-      const chunk = await db.insertChunk({
-        documentId,
-        orden: index,
-        texto,
-        hashFragmento: sha256(texto),
+      const vector = await ollama.embed(texto);
+      preparados.push({ orden: index, texto, hashFragmento: sha256(texto), vector });
+    }
+
+    // 2) Persistencia atómica: documento + fragmentos + embeddings en una transacción.
+    const persist = async (store) => {
+      const { id: documentId } = await store.insertDocument({
+        nombre: path.basename(filePath),
+        ruta: filePath,
+        hashContenido: contentHash,
+        tamanoBytes: stats.size,
       });
 
-      if (!chunk.created) continue;
+      let inserted = 0;
+      for (const item of preparados) {
+        const chunk = await store.insertChunk({
+          documentId,
+          orden: item.orden,
+          texto: item.texto,
+          hashFragmento: item.hashFragmento,
+        });
 
-      const vector = await ollama.embed(texto);
-      await db.insertEmbedding({ chunkId: chunk.id, vector, modelo: ollama.embeddingModel });
-      inserted += 1;
-    }
+        if (!chunk.created) continue;
+
+        await store.insertEmbedding({ chunkId: chunk.id, vector: item.vector, modelo: ollama.embeddingModel });
+        inserted += 1;
+      }
+
+      return { documentId, inserted };
+    };
+
+    const usaTransaccion = typeof db.withTransaction === 'function';
+    const { documentId, inserted } = usaTransaccion ? await db.withTransaction(persist) : await persist(db);
 
     if (logger) {
       logger.info('ingest', `Documento procesado: ${path.basename(filePath)}`, { chunks: inserted });

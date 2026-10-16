@@ -76,9 +76,9 @@ export function translateDbError(error, operation) {
 }
 
 export function createDatabase({ pool, logger }) {
-  const run = async (operation, text, params = []) => {
+  const run = async (executor, operation, text, params = []) => {
     try {
-      return await pool.query(text, params);
+      return await executor.query(text, params);
     } catch (error) {
       const translated = translateDbError(error, operation);
       if (logger) {
@@ -88,27 +88,12 @@ export function createDatabase({ pool, logger }) {
     }
   };
 
-  return {
-    get pool() {
-      return pool;
-    },
-
-    async ping() {
-      const result = await run('ping', 'SELECT 1 AS ok');
-      return result.rows[0]?.ok === 1;
-    },
-
-    async findDocumentByHash(hashContenido) {
-      const result = await run(
-        'findDocumentByHash',
-        'SELECT id, nombre FROM documents WHERE hash_contenido = $1 LIMIT 1',
-        [hashContenido],
-      );
-      return result.rows[0] ?? null;
-    },
-
+  // Las operaciones de escritura se construyen una sola vez y pueden ejecutarse
+  // contra el pool (flujo normal) o contra el client de una transacción.
+  const buildWriteOperations = (executor) => ({
     async insertDocument({ nombre, ruta, hashContenido, tamanoBytes }) {
       const result = await run(
+        executor,
         'insertDocument',
         `INSERT INTO documents (nombre, ruta, hash_contenido, tamano_bytes)
          VALUES ($1, $2, $3, $4)
@@ -120,6 +105,7 @@ export function createDatabase({ pool, logger }) {
 
     async insertChunk({ documentId, orden, texto, hashFragmento }) {
       const result = await run(
+        executor,
         'insertChunk',
         `INSERT INTO chunks (document_id, orden, texto, hash_fragmento)
          VALUES ($1, $2, $3, $4)
@@ -133,6 +119,7 @@ export function createDatabase({ pool, logger }) {
 
     async insertEmbedding({ chunkId, vector, modelo }) {
       const result = await run(
+        executor,
         'insertEmbedding',
         `INSERT INTO embeddings (chunk_id, vector, modelo)
          SELECT $1, $2::vector, $3
@@ -142,9 +129,52 @@ export function createDatabase({ pool, logger }) {
       );
       return { id: result.rows[0]?.id ?? null, created: Boolean(result.rows[0]) };
     },
+  });
+
+  const writes = buildWriteOperations(pool);
+
+  return {
+    get pool() {
+      return pool;
+    },
+
+    // Ejecuta el callback con operaciones de escritura ligadas a una transacción:
+    // si algo falla, se hace ROLLBACK y no quedan filas parciales (documento huérfano).
+    async withTransaction(callback) {
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        const result = await callback(buildWriteOperations(client));
+        await client.query('COMMIT');
+        return result;
+      } catch (error) {
+        await client.query('ROLLBACK').catch(() => {});
+        throw translateDbError(error, 'transaction');
+      } finally {
+        client.release();
+      }
+    },
+
+    ...writes,
+
+    async ping() {
+      const result = await run(pool, 'ping', 'SELECT 1 AS ok');
+      return result.rows[0]?.ok === 1;
+    },
+
+    async findDocumentByHash(hashContenido) {
+      const result = await run(
+        pool,
+        'findDocumentByHash',
+        'SELECT id, nombre FROM documents WHERE hash_contenido = $1 LIMIT 1',
+        [hashContenido],
+      );
+      return result.rows[0] ?? null;
+    },
 
     async searchSimilar({ modelo, vector, limite }) {
       const result = await run(
+        pool,
         'searchSimilar',
         `SELECT c.texto, c.orden, c.document_id, d.nombre AS documento,
                 e.vector <=> $2::vector AS distancia
@@ -159,8 +189,18 @@ export function createDatabase({ pool, logger }) {
       return result.rows;
     },
 
+    async listEmbeddingModels() {
+      const result = await run(
+        pool,
+        'listEmbeddingModels',
+        'SELECT DISTINCT modelo FROM embeddings ORDER BY modelo',
+      );
+      return result.rows.map((row) => row.modelo);
+    },
+
     async listDocuments() {
       const result = await run(
+        pool,
         'listDocuments',
         `SELECT id, nombre, hash_contenido, tamano_bytes, fecha_ingesta
          FROM documents
