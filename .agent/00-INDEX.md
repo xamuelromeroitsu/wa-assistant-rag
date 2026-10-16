@@ -62,7 +62,7 @@ wa-assistant-rag/
 | 4 | [APIs](apis/) | Ollama, API interna, whatsapp-web.js, Cloud API | 4 |
 | 5 | [Base de datos](database/) | Esquema, migraciones, SQL, índices, backups | 5 |
 | 6 | [Node.js](nodejs/) | Módulos, flujo de ejecución, errores, scripts, env | 5 |
-| 7 | [Guías](guides/) | Setup, pipeline RAG, ingesta de documentos, testing y demo del MVP | 5 |
+| 7 | [Guías](guides/) | Setup, pipeline RAG, ingesta de documentos, testing, demo del MVP y vinculación por QR | 6 |
 | 8 | [Usuario](user/) | Guía de uso y preguntas frecuentes del bot | 2 |
 | 9 | [Roadmap](roadmap/) | Resumen ejecutivo, 3 horizontes, backlog | 5 |
 | 10 | [Operación](operations/) | Runbook, troubleshooting, seguridad y privacidad | 3 |
@@ -112,6 +112,7 @@ wa-assistant-rag/
 | `guides/rag-pipeline.md` | Listo | Alta | Técnico |
 | `guides/ingesta-documentos.md` | Listo | Media | Técnico |
 | `guides/demo-mvp.md` | Listo | Alta | Equipo |
+| `guides/vinculacion-qr.md` | Listo | Alta | Equipo |
 | `guides/testing.md` | Listo | Media | Técnico |
 | `user/guia-uso.md` | Listo | Baja | Product Owner |
 | `user/preguntas-frecuentes.md` | Listo | Baja | Product Owner |

@@ -62,6 +62,7 @@ copy .env.example .env
 | Variable | Default | Descripción | Requerida |
 |---|---|---|---|
 | `WABA_BOT_NUMBER` | — | Número de WhatsApp del bot (referencia) | ❌ No |
+| `QR_PNG_PATH` | `.wwebjs_auth/qr.png` | Ruta del PNG con el QR de vinculación | ❌ No |
 
 ## Carga y validación de configuración
 
@@ -126,6 +127,9 @@ TOP_K=5
 
 # ---- Logging ----
 LOG_LEVEL=DEBUG
+
+# ---- Vinculación por QR ----
+QR_PNG_PATH=.wwebjs_auth/qr.png
 ```
 
 ## Validación de entorno

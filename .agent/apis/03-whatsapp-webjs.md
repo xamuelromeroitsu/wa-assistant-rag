@@ -30,7 +30,7 @@
 | Método | Recurso | Propósito |
 |---|---|---|
 | `WebSocket` | `authStrategy` | Autenticación y persistencia de sesión |
-| `Event` | `qr` | Generación de código QR para vinculación de dispositivo |
+| `Event` | `qr` | Generación de código QR para vinculación de dispositivo (terminal + PNG, ver [guía de vinculación](../guides/vinculacion-qr.md)) |
 | `Event` | `ready` | Cliente conectado y listo para recibir mensajes |
 | `Event` | `message_create` | Nuevo mensaje recibido de WhatsApp |
 | `Event` | `disconnected` | Sesión desconectada de WhatsApp |
@@ -62,9 +62,9 @@ npm run dev
     │
     ▼
 client.initialize()
-    │
-    ▼
-Evento 'qr' → mostrar QR en terminal
+     │
+     ▼
+Evento 'qr' → mostrar QR en terminal + guardar PNG (.wwebjs_auth/qr.png)
     │
     ▼
 Usuario escanea QR con WhatsApp (Dispositivos Vinculados)
@@ -170,6 +170,7 @@ Este comportamiento está configurado en `handlers/message.js`.
 | Variable | Default | Descripción |
 |---|---|---|
 | `WABA_BOT_NUMBER` | — | Número de WhatsApp del bot (opcional, para referencia) |
+| `QR_PNG_PATH` | `.wwebjs_auth/qr.png` | Ruta donde se guarda el QR como PNG (ver [guía de vinculación](../guides/vinculacion-qr.md)) |
 
 ### Limitaciones y Riesgos
 

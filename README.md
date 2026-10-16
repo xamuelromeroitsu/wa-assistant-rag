@@ -138,11 +138,13 @@ copy .env.example .env
 npm run dev
 ```
 
+El QR se muestra **dibujado en la terminal** y además se guarda como **PNG** en `.wwebjs_auth/qr.png` (ruta configurable con `QR_PNG_PATH`). Guía completa: [vinculación por QR](.agent/guides/vinculacion-qr.md).
+
 ### ✅ ¿Cómo sé que todo funciona?
 
 1. **Paso 2:** verás una línea que dice `Container ... Started` (el contenedor de la base de datos está corriendo).
 2. **Paso 3:** la descarga del modelo avanza con una barra de progreso.
-3. **Paso 6:** en la terminal aparece un **código QR**.
+3. **Paso 6:** en la terminal aparece un **código QR** (y el archivo `.wwebjs_auth/qr.png`).
 4. **Abre WhatsApp en tu celular** → Menú (⋮) → **Dispositivos vinculados** → **Vincular un dispositivo** → escanea el QR.
 5. Envía **"hola"** al número del bot. Deberías recibir una respuesta en menos de 3 segundos.
 
@@ -180,6 +182,7 @@ EMBEDDING_MODEL=nomic-embed-text
 | `OLLAMA_HOST` | Dirección del servicio de Ollama. | `http://localhost:11434` |
 | `OLLAMA_MODEL` | Modelo que genera las respuestas. | `llama3.2` |
 | `EMBEDDING_MODEL` | Modelo que convierte texto en vectores. | `nomic-embed-text` |
+| `QR_PNG_PATH` | Dónde se guarda el QR como PNG al vincular. | `.wwebjs_auth/qr.png` |
 
 > **Importante:** Nunca subas tu archivo `.env` al repositorio. Siempre está protegido por el `.gitignore`. La primera vez debes descargar también el modelo de embeddings: `ollama pull nomic-embed-text`.
 
@@ -201,6 +204,7 @@ Para entender a fondo cada parte del proyecto, entrá en la documentación de la
 | [.agent/roadmap/01-mvp-corto-plazo.md](.agent/roadmap/01-mvp-corto-plazo.md) | Plan de trabajo (metodología Scrum) y MVP. |
 | [.agent/architecture/04-analisis-src.md](.agent/architecture/04-analisis-src.md) | 🔬 Análisis del código `src/`: puntos fuertes, debilidades y hoja de ruta de escalabilidad. |
 | [.agent/guides/demo-mvp.md](.agent/guides/demo-mvp.md) | 🧪 Demo del MVP ejecutada con PostgreSQL + Ollama reales (evidencia de H1–H5). |
+| [.agent/guides/vinculacion-qr.md](.agent/guides/vinculacion-qr.md) | 📲 Vincular el bot por QR: terminal + PNG (`QR_PNG_PATH`). |
 
 ---
 
@@ -269,6 +273,7 @@ Normas básicas:
 | Problema | Posible causa | Solución |
 |---|---|---|
 | El QR no aparece al ejecutar `npm run dev` | Falta la carpeta de sesión o hubo un error de WhatsApp | Borra la carpeta `.wwebjs_auth` y vuelve a ejecutar |
+| El PNG del QR no se genera | Permisos de escritura o ruta inválida | El QR sigue visible en la terminal; cambiá `QR_PNG_PATH` |
 | El bot se desconecta después de un tiempo | La sesión de WhatsApp Web expiró | Reescanea el QR reiniciando el bot |
 | La base de datos no conecta | El contenedor de Podman no está corriendo | Ejecuta `podman compose up -d` |
 | "Model not found" al responder | No descargaste el modelo de Ollama | Ejecuta `ollama pull llama3.2` y `ollama pull nomic-embed-text` |

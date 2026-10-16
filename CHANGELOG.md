@@ -4,6 +4,13 @@
 
 ## [Sin publicar]
 
+### Vinculación por QR (terminal + PNG)
+
+- **QR escaneable en la terminal**: nuevo `src/qr.js` (`createQrPresenter`) que dibuja el QR en ASCII con `qrcode-terminal`, reemplazando el `console.log(qr)` crudo que no se podía escanear.
+- **QR como PNG**: se guarda en `.wwebjs_auth/qr.png` (ruta configurable con `QR_PNG_PATH`) usando `qrcode`; se sobreescribe con cada QR nuevo.
+- **Nuevo código de error `ERR_WHATSAPP_003`** con mensaje amigable si falla la escritura del PNG; el QR sigue visible en la terminal.
+- **Tests**: 5 casos de `src/qr.js` con dobles + 4 de config para `QR_PNG_PATH` (105 en total, eran 96).
+
 ### Verificación del MVP (H4, H5)
 
 - **H4 cerrado con evidencia real**: `tests/fixtures/` con un PDF real (encabezados + tabla) y un TXT de nutrición; nuevo `tests/integration/rag/ingest-h4.test.js` (8 casos) que verifica extracción del PDF, chunking sin pérdida de contenido, idempotencia por hash, errores parciales sin abortar el lote, disponibilidad de los fragmentos para H3 **sin reiniciar el bot** y la advertencia de H5.
@@ -23,6 +30,8 @@
 
 ### Documentación
 
+- Nuevo `.agent/guides/vinculacion-qr.md`: guía de vinculación por QR (terminal + PNG, ciclo de vida, `QR_PNG_PATH`, solución de problemas); enlazada desde `.agent/00-INDEX.md` (categoría Guías) y `README.md`.
+- `.agent/apis/03-whatsapp-webjs.md` y `.agent/nodejs/05-config-y-env.md` documentan la variable `QR_PNG_PATH` y enlazan la guía.
 - Nuevo `.agent/guides/demo-mvp.md`: corrida manual documentada contra PostgreSQL 16 + pgvector y Ollama reales (2 documentos, 6 fragmentos, respuesta fundamentada, idempotencia verificada).
 - Nuevo `.agent/architecture/04-analisis-src.md`: auditoría de `src/` con puntos fuertes, debilidades (umbral de distancia ausente, chunking sin overlap, sin rate-limiting ni caché de embeddings, tabla `sessions` sin uso) y hoja de ruta de escalabilidad en 4 fases.
 - `README.md`: roadmap H4/H5 marcados como completos, enlaces de documentación corregidos a las rutas reales de `.agent/`, estructura actualizada (scripts, CI).
