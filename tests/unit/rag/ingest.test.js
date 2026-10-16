@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, it, expect, vi } from 'vitest';
 import { extractText, collectFiles, createIngestService, runIngestCli, SUPPORTED_EXTENSIONS } from '../../../src/rag/ingest.js';
+import { AppError, ERROR_CODES } from '../../../src/errors.js';
 
 let root;
 
@@ -144,5 +145,32 @@ describe('rag/ingest.js — pipeline de ingesta', () => {
     expect(summary.errors).toHaveLength(1);
     expect(summary.errors[0].code).toBe('ERR_FILE_002');
     expect(summary.results.length + summary.errors.length).toBe(2);
+  });
+
+  it('persiste dentro de una transacción cuando la BD la soporta', async () => {
+    const { db, ollama } = makeDoubles();
+    db.withTransaction = vi.fn(async (callback) => callback(db));
+    const file = path.join(root, 'transaccion.txt');
+    await writeFile(file, 'Contenido corto que cabe en un solo fragmento.');
+
+    const result = await createIngestService({ db, ollama }).ingestFile(file);
+
+    expect(result.status).toBe('ok');
+    expect(db.withTransaction).toHaveBeenCalledTimes(1);
+    expect(db.insertDocument).toHaveBeenCalledTimes(1);
+    expect(db.insertChunk).toHaveBeenCalledTimes(1);
+  });
+
+  it('propaga el error y no confirma nada si la transacción falla', async () => {
+    const { db, ollama } = makeDoubles();
+    db.withTransaction = vi.fn(async (callback) => callback(db));
+    db.insertChunk = vi.fn(async () => {
+      throw new AppError(ERROR_CODES.DB_QUERY, { message: 'fallo simulado en el insert' });
+    });
+    const file = path.join(root, 'rollback.txt');
+    await writeFile(file, 'Contenido que provoca rollback.');
+
+    await expect(createIngestService({ db, ollama }).ingestFile(file)).rejects.toMatchObject({ code: 'ERR_DB_003' });
+    expect(db.insertEmbedding).not.toHaveBeenCalled();
   });
 });

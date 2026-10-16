@@ -1,0 +1,17 @@
+Guia de alimentacion y nutricion — documento de prueba para la demo del MVP (H4).
+
+Los macronutrientes son los nutrientes que el organismo necesita en mayor cantidad. Se dividen en tres grupos principales: proteinas, carbohidratos y grasas. Cada uno aporta una cantidad distinta de energia por gramo.
+
+La proteina aporta 4 kcal por gramo. Se encuentra en carnes, pescados, huevos, legumbres y lacteos. Su funcion principal es construir y reparar tejidos, ademas de participar en la defensa inmunitaria y en la formacion de enzimas.
+
+Los carbohidratos aportan 4 kcal por gramo. Son la principal fuente de energia del cuerpo humano. Se dividen en simples, como el azucar de la fruta, y complejos, como los cereales integrales, las legumbres y las verduras.
+
+Las grasas aportan 9 kcal por gramo, siendo el macronutriente mas energetico. Se distinguen las grasas insaturadas, presentes en el aceite de oliva, la palta y los frutos secos, de las grasas saturadas, cuyo consumo excesivo se asocia a enfermedades cardiovasculares.
+
+La fibra dietetica no aporta energia pero es fundamental para la salud digestiva. Se recomienda un consumo de 25 a 30 gramos por dia. Se encuentra en frutas, verduras, legumbres y cereales integrales.
+
+El agua es esencial para la vida. Se recomienda beber entre 6 y 8 vasos de agua por dia, cantidad que debe aumentar con el calor, el ejercicio fisico intenso o estados de fiebre.
+
+Las vitaminas y los minerales son micronutrientes necesarios en pequenas cantidades. La vitamina C participa en la absorcion del hierro y en la sintesis de colageno; el calcio y la vitamina D son claves para la salud osea.
+
+Un plato equilibrado deberia incluir la mitad de verduras, un cuarto de proteinas magras y un cuarto de carbohidratos preferentemente integrales. Las porciones deben ajustarse al gasto energetico de cada persona.

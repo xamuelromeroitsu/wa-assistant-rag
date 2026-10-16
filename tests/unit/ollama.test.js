@@ -58,6 +58,16 @@ describe('ollama.js', () => {
     await expect(client.generate('p')).rejects.toMatchObject({ code: 'ERR_OLLAMA_002' });
   });
 
+  it('sugiere el modelo de embeddings correcto cuando falla /api/embeddings', async () => {
+    const fetchImpl = vi.fn(async () => ({ ok: false, status: 404, json: async () => ({}) }));
+    const client = createOllamaClient({ host: 'http://x', model: 'llama3.2', embeddingModel: 'nomic-embed-text', fetchImpl });
+
+    await expect(client.embed('p')).rejects.toMatchObject({
+      code: 'ERR_OLLAMA_002',
+      message: expect.stringContaining('ollama pull nomic-embed-text'),
+    });
+  });
+
   it('verifyModels detecta modelos faltantes', async () => {
     const fetchImpl = vi.fn(async () => okResponse({ models: [{ name: 'llama3.2:latest' }] }));
     const client = createOllamaClient({ host: 'http://x', model: 'llama3.2', embeddingModel: 'nomic-embed-text', fetchImpl });

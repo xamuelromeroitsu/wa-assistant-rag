@@ -47,4 +47,66 @@ describe('rag/search.js', () => {
     expect(result.fragments).toEqual([]);
     expect(result.context).toBe('');
   });
+
+  it('no falla si la BD no expone listEmbeddingModels', async () => {
+    const { db, ollama } = makeDeps([]);
+    const logger = { warn: vi.fn(), info: vi.fn(), debug: vi.fn() };
+    const service = createSearchService({ db, ollama, logger });
+
+    await expect(service.search('algo sin resultados')).resolves.toMatchObject({ fragments: [] });
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('advierte cuando EMBEDDING_MODEL no coincide con los embeddings almacenados', async () => {
+    const { db, ollama } = makeDeps([]);
+    db.listEmbeddingModels = vi.fn(async () => ['nomic-embed-text-viejo']);
+    const logger = { warn: vi.fn(), info: vi.fn(), debug: vi.fn() };
+    const service = createSearchService({ db, ollama, logger });
+
+    await service.search('pregunta sin resultados');
+
+    expect(db.listEmbeddingModels).toHaveBeenCalled();
+    expect(logger.warn).toHaveBeenCalledWith(
+      'rag',
+      expect.stringContaining('no coincide con los embeddings almacenados'),
+      { configured: 'nomic-embed-text', stored: ['nomic-embed-text-viejo'] },
+    );
+  });
+
+  it('no advierte cuando el modelo coincide con los embeddings almacenados', async () => {
+    const { db, ollama } = makeDeps([]);
+    db.listEmbeddingModels = vi.fn(async () => ['nomic-embed-text']);
+    const logger = { warn: vi.fn(), info: vi.fn(), debug: vi.fn() };
+    const service = createSearchService({ db, ollama, logger });
+
+    await service.search('pregunta sin resultados');
+
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('informa que no hay documentos cargados cuando la BD está vacía', async () => {
+    const { db, ollama } = makeDeps([]);
+    db.listEmbeddingModels = vi.fn(async () => []);
+    const logger = { warn: vi.fn(), info: vi.fn(), debug: vi.fn() };
+    const service = createSearchService({ db, ollama, logger });
+
+    await service.search('pregunta sin documentos');
+
+    expect(logger.info).toHaveBeenCalledWith('rag', expect.stringContaining('No hay documentos cargados'));
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('no advierte cuando la búsqueda sí devuelve fragmentos', async () => {
+    const { db, ollama } = makeDeps([
+      { texto: 'La proteína aporta 4 kcal por gramo.', documento: 'nutricion.pdf', document_id: 1, orden: 0, distancia: 0.1 },
+    ]);
+    db.listEmbeddingModels = vi.fn(async () => ['otro-modelo']);
+    const logger = { warn: vi.fn(), info: vi.fn(), debug: vi.fn() };
+    const service = createSearchService({ db, ollama, logger });
+
+    await service.search('pregunta con resultados');
+
+    expect(db.listEmbeddingModels).not.toHaveBeenCalled();
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
 });

@@ -60,6 +60,23 @@ describe('config.test.js — loadConfig', () => {
     expect(config.ollama.host).toBe('http://localhost:11434');
   });
 
+  it('aplica los timeouts por defecto de Ollama', () => {
+    const config = loadConfig({ ...validEnv });
+
+    expect(config.ollama.timeouts).toEqual({ generate: 30000, embeddings: 15000, tags: 5000 });
+  });
+
+  it('permite override de los timeouts de Ollama por entorno', () => {
+    const config = loadConfig({ ...validEnv, OLLAMA_GENERATE_TIMEOUT_MS: '180000' });
+
+    expect(config.ollama.timeouts.generate).toBe(180000);
+    expect(config.ollama.timeouts.embeddings).toBe(15000);
+  });
+
+  it('rechaza un timeout de Ollama no entero positivo', () => {
+    expect(() => loadConfig({ ...validEnv, OLLAMA_GENERATE_TIMEOUT_MS: '0' })).toThrowError();
+  });
+
   it('lanza ERR_CONFIG_001 cuando falta una variable requerida', () => {
     const env = { ...validEnv };
     delete env.PGHOST;
