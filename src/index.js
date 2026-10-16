@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import whatsappWeb from 'whatsapp-web.js';
+import qrcodeTerminal from 'qrcode-terminal';
+import qrcode from 'qrcode';
 import { loadConfig } from './config.js';
 import { createLogger, formatLogTimestamp } from './logger.js';
 import { createPool, createDatabase } from './db.js';
@@ -7,6 +9,7 @@ import { createOllamaClient } from './ollama.js';
 import { createSearchService } from './rag/search.js';
 import { createMessageHandler } from './handlers/message.js';
 import { createHealthApp, startHealthServer } from './server.js';
+import { createQrPresenter } from './qr.js';
 import { isAppError } from './errors.js';
 
 const { Client, LocalAuth } = whatsappWeb;
@@ -61,14 +64,29 @@ async function bootstrap() {
     logger.warn('server', error.userMessage ?? error.message, { code: error.code });
   }
 
+  const qrPresenter = createQrPresenter({
+    terminal: qrcodeTerminal,
+    png: qrcode,
+    logger,
+    outputPath: config.whatsapp.qr.outputPath,
+  });
+
   const client = new Client({
     authStrategy: new LocalAuth({ clientId: 'wa-assistant' }),
     puppeteer: { headless: true },
   });
 
-  client.on('qr', (qr) => {
+  client.on('qr', async (qr) => {
     logger.info('whatsapp', 'Escaneá este código QR (WhatsApp → Dispositivos vinculados):');
-    console.log(qr);
+    try {
+      await qrPresenter.present(qr);
+    } catch (error) {
+      logger.warn(
+        'whatsapp',
+        `${error.userMessage ?? error.message} El QR sigue visible en la terminal.`,
+        { code: error.code ?? 'desconocido' },
+      );
+    }
   });
 
   client.on('ready', () => {

@@ -15,6 +15,7 @@ const DEFAULTS = Object.freeze({
   PORT: '3000',
   TOP_K: '5',
   LOG_LEVEL: 'INFO',
+  QR_PNG_PATH: '.wwebjs_auth/qr.png',
   OLLAMA_TIMEOUT_GENERATE: '30000',
   OLLAMA_TIMEOUT_EMBEDDINGS: '15000',
   OLLAMA_TIMEOUT_TAGS: '5000',
@@ -81,6 +82,9 @@ export function loadConfig(env = process.env) {
     }),
     whatsapp: Object.freeze({
       botNumber: isBlank(env.WABA_BOT_NUMBER) ? null : env.WABA_BOT_NUMBER,
+      qr: Object.freeze({
+        outputPath: isBlank(env.QR_PNG_PATH) ? DEFAULTS.QR_PNG_PATH : String(env.QR_PNG_PATH),
+      }),
     }),
     logging: Object.freeze({
       level: logLevel,

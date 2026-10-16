@@ -36,6 +36,10 @@ describe('config.test.js — .env.example', () => {
   it('define el puerto del servidor interno', () => {
     expect(envExample).toMatch(/^PORT=/m);
   });
+
+  it('define la ruta del PNG del código QR', () => {
+    expect(envExample).toMatch(/^QR_PNG_PATH=/m);
+  });
 });
 
 describe('config.test.js — loadConfig', () => {
@@ -71,6 +75,24 @@ describe('config.test.js — loadConfig', () => {
 
     expect(config.ollama.timeouts.generate).toBe(180000);
     expect(config.ollama.timeouts.embeddings).toBe(15000);
+  });
+
+  it('aplica la ruta por defecto del PNG del código QR', () => {
+    const config = loadConfig({ ...validEnv });
+
+    expect(config.whatsapp.qr.outputPath).toBe('.wwebjs_auth/qr.png');
+  });
+
+  it('permite override de la ruta del PNG del código QR', () => {
+    const config = loadConfig({ ...validEnv, QR_PNG_PATH: 'tmp/qr.png' });
+
+    expect(config.whatsapp.qr.outputPath).toBe('tmp/qr.png');
+  });
+
+  it('ignora QR_PNG_PATH vacío y usa el default', () => {
+    const config = loadConfig({ ...validEnv, QR_PNG_PATH: '  ' });
+
+    expect(config.whatsapp.qr.outputPath).toBe('.wwebjs_auth/qr.png');
   });
 
   it('rechaza un timeout de Ollama no entero positivo', () => {
